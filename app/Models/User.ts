@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, manyToMany, ManyToMany, scope } from '@ioc:Adonis/Lucid/Orm'
 import Role from './Role'
+import { active, inactive } from 'App/utils/scopes'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -31,4 +32,8 @@ export default class User extends BaseModel {
 
   @manyToMany(() => Role)
   public roles: ManyToMany<typeof Role>
+
+  // active/inactive scopes
+  public static active = scope(active)
+  public static inactive = scope(inactive)
 }
