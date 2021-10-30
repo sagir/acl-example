@@ -28,6 +28,7 @@ export const hasPermission = async (
     })
     .select('permissions.id as id')
     .limit(1)
+    .debug(true)
     .exec()
 
   Logger.info('Permission: ', permission)
