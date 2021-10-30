@@ -5,6 +5,8 @@ export default class PermissionDependencyPivots extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
+      table.increments('id').primary()
+
       table
         .integer('permission_id')
         .notNullable()
@@ -14,11 +16,19 @@ export default class PermissionDependencyPivots extends BaseSchema {
         .onDelete('CASCADE')
 
       table
-        .integer('depends_on')
+        .integer('resource_id')
         .notNullable()
         .unsigned()
         .references('id')
-        .inTable('permissions')
+        .inTable('resources')
+        .onDelete('CASCADE')
+
+      table
+        .integer('action_id')
+        .notNullable()
+        .unsigned()
+        .references('id')
+        .inTable('actions')
         .onDelete('CASCADE')
     })
   }
