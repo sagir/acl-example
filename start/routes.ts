@@ -20,6 +20,5 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
+Route.post('api/v1/login', 'AuthController.login').as('api.v1.login')
+Route.post('api/v1/logout', 'AuthController.logout').middleware('auth:api').as('api.v1.logout')
