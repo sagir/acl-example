@@ -17,6 +17,12 @@ export default class Role extends BaseModel {
   @column()
   public description?: string
 
+  @column()
+  public deletable: boolean = true
+
+  @column()
+  public default: boolean = false
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
