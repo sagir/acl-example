@@ -9,6 +9,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('name', 50).notNullable()
       table.string('email', 255).notNullable()
       table.string('password', 180).notNullable()
+      table.boolean('is_super_admin').defaultTo(false)
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL

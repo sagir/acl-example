@@ -30,6 +30,6 @@ export const hasPermission = async (
     .limit(1)
     .exec()
 
-  Logger.info('Permission: ', permission)
+  Logger.info(`Permission: ${permission[0]?.id}`)
   return !!permission.length
 }

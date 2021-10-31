@@ -1,9 +1,8 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { required, email, minLength, maxLength } from 'App/utils/validationMessages'
 
-export default class LoginValidator {
-  constructor(protected ctx: HttpContextContract) {}
+export default class UserValidator {
+  constructor(protected ctx: HttpContextContract, private userId: number = 0) {}
 
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
@@ -25,12 +24,26 @@ export default class LoginValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, [rules.required(), rules.email()]),
+    name: schema.string({ trim: true }, [
+      rules.required(),
+      rules.minLength(3),
+      rules.maxLength(50),
+    ]),
+    email: schema.string({ trim: true }, [
+      rules.required(),
+      rules.email(),
+      rules.unique({
+        table: 'users',
+        column: 'email',
+        whereNot: { id: this.userId },
+      }),
+    ]),
     password: schema.string({ trim: true }, [
       rules.required(),
       rules.minLength(6),
       rules.maxLength(16),
     ]),
+    roles: schema.array([rules.minLength(1)]).members(schema.number([rules.unsigned()])),
   })
 
   /**
@@ -44,10 +57,5 @@ export default class LoginValidator {
    * }
    *
    */
-  public messages = {
-    required,
-    email,
-    minLength,
-    maxLength,
-  }
+  public messages = {}
 }

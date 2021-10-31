@@ -11,6 +11,8 @@ export default class UserSeeder extends BaseSeeder {
     superUser.name = 'Super User'
     superUser.email = 'super@user.com'
     superUser.password = '123456'
+    // @ts-ignore
+    superUser['isSuperAdmin'] = true
     await superUser.save()
     await superUser.related('roles').attach([superUserRole.id])
 
