@@ -3,7 +3,6 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import User from 'App/Models/User'
 import LoginValidator from 'App/Validators/LoginValidator'
 import { LoginResponse } from 'App/Responses/LoginResponse'
-import Permission from 'App/Models/Permission'
 import Database from '@ioc:Adonis/Lucid/Database'
 import { PermissionResponse } from 'App/Responses/PermissionsResponse'
 
@@ -42,7 +41,7 @@ export default class AuthController {
     }
   }
 
-  public async permissions({ auth, response }: HttpContextContract): Promise<PermissionResponse[]> {
+  public async permissions({ auth }: HttpContextContract): Promise<PermissionResponse[]> {
     const { id } = auth.use('api').user as User
 
     const permissions: any = await Database.from('permissions')
