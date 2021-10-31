@@ -1,24 +1,10 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
+import { Actions } from 'App/Enums/Actions'
+import { Resources } from 'App/Enums/Resources'
 import Action from 'App/Models/Action'
 import Permission from 'App/Models/Permission'
 import PermissionDependency from 'App/Models/PermissionDependency'
 import Resource from 'App/Models/Resource'
-
-enum Actions {
-  MENU = 'menu',
-  READ = 'read',
-  CREATE = 'create',
-  UPDATE = 'update',
-  DEACTIVATE = 'deactivate',
-  ACTIVATE = 'activate',
-  DELETE = 'delete',
-}
-
-enum Resources {
-  USERS = 'users',
-  ROLES = 'roles',
-  PERMISSIONS = 'permissions',
-}
 
 interface PermissionData {
   name: Resources

@@ -41,7 +41,8 @@ export default class AuthController {
     }
   }
 
-  public async permissions({ auth }: HttpContextContract): Promise<PermissionResponse[]> {
+  public async permissions({ auth, bouncer }: HttpContextContract): Promise<PermissionResponse[]> {
+    await bouncer.with('PermissionPolicy').authorize('view')
     const { id } = auth.use('api').user as User
 
     const permissions: any = await Database.from('permissions')
