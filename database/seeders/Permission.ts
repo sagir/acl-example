@@ -17,6 +17,7 @@ enum Actions {
 enum Resources {
   USERS = 'users',
   ROLES = 'roles',
+  PERMISSIONS = 'permissions',
 }
 
 interface PermissionData {
@@ -37,33 +38,118 @@ export default class PermissionSeeder extends BaseSeeder {
 
   private permissions: PermissionData[] = [
     {
+      name: Resources.PERMISSIONS,
+      actions: [{ name: Actions.READ }],
+    },
+    {
       name: Resources.ROLES,
       actions: [
-        { name: Actions.READ },
-        { name: Actions.MENU, dependencies: [{ name: Resources.ROLES, action: Actions.READ }] },
-        { name: Actions.CREATE, dependencies: [{ name: Resources.ROLES, action: Actions.READ }] },
-        { name: Actions.UPDATE, dependencies: [{ name: Resources.ROLES, action: Actions.READ }] },
-        { name: Actions.ACTIVATE, dependencies: [{ name: Resources.ROLES, action: Actions.READ }] },
+        {
+          name: Actions.READ,
+          dependencies: [{ name: Resources.PERMISSIONS, action: Actions.READ }],
+        },
+        {
+          name: Actions.MENU,
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.CREATE,
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.UPDATE,
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.ACTIVATE,
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
+        },
         {
           name: Actions.DEACTIVATE,
-          dependencies: [{ name: Resources.ROLES, action: Actions.READ }],
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
         },
-        { name: Actions.DELETE, dependencies: [{ name: Resources.ROLES, action: Actions.READ }] },
+        {
+          name: Actions.DELETE,
+          dependencies: [
+            { name: Resources.ROLES, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+          ],
+        },
       ],
     },
     {
       name: Resources.USERS,
       actions: [
-        { name: Actions.READ },
-        { name: Actions.MENU, dependencies: [{ name: Resources.USERS, action: Actions.READ }] },
-        { name: Actions.CREATE, dependencies: [{ name: Resources.USERS, action: Actions.READ }] },
-        { name: Actions.UPDATE, dependencies: [{ name: Resources.USERS, action: Actions.READ }] },
-        { name: Actions.ACTIVATE, dependencies: [{ name: Resources.USERS, action: Actions.READ }] },
+        {
+          name: Actions.READ,
+          dependencies: [
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.MENU,
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.CREATE,
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.UPDATE,
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
+        {
+          name: Actions.ACTIVATE,
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
         {
           name: Actions.DEACTIVATE,
-          dependencies: [{ name: Resources.USERS, action: Actions.READ }],
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
         },
-        { name: Actions.DELETE, dependencies: [{ name: Resources.USERS, action: Actions.READ }] },
+        {
+          name: Actions.DELETE,
+          dependencies: [
+            { name: Resources.USERS, action: Actions.READ },
+            { name: Resources.PERMISSIONS, action: Actions.READ },
+            { name: Resources.ROLES, action: Actions.READ },
+          ],
+        },
       ],
     },
   ]

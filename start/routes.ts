@@ -17,8 +17,15 @@
 | import './routes/customer'
 |
 */
-
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.post('api/v1/login', 'AuthController.login').as('api.v1.login')
-Route.post('api/v1/logout', 'AuthController.logout').middleware('auth:api').as('api.v1.logout')
+Route.group(() => {
+  Route.post('/login', 'AuthController.login').as('login')
+
+  Route.group(() => {
+    Route.post('/logout', 'AuthController.logout').as('logout')
+    Route.get('/permissions', 'AuthController.permissions').as('permissions')
+  }).middleware('auth:api')
+})
+  .prefix('/api/v1/auth')
+  .as('api.v1')
