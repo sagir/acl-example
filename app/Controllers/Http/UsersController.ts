@@ -10,19 +10,16 @@ export default class UsersController {
     return await UserService.getUsersList(auth.use('api').user as User)
   }
 
-  public async store({ bouncer, request, response }: HttpContextContract): Promise<void> {
+  public async store(ctx: HttpContextContract): Promise<void> {
+    const { bouncer, request, response } = ctx
     await bouncer.with('UserPolicy').authorize('create')
     await request.validate(UserValidator)
 
-    const user = new User()
-    user.name = request.input('name')
-    user.email = request.input('email')
-    user.password = request.input('password')
+    let user = new User()
     const trx = await Database.transaction()
 
     try {
-      await user.useTransaction(trx).save()
-      await user.related('roles').attach(request.input('roles'), trx)
+      user = await UserService.saveUser(user, trx, ctx)
       await trx.commit()
     } catch (error) {
       await trx.rollback()
@@ -32,9 +29,45 @@ export default class UsersController {
     return response.created(user)
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ bouncer, params }: HttpContextContract): Promise<User> {
+    await bouncer.with('UserPolicy').authorize('view')
+    return await User.findOrFail(params.id)
+  }
 
-  public async update({}: HttpContextContract) {}
+  public async update(ctx: HttpContextContract): Promise<void> {
+    const { bouncer, params, request, response } = ctx
+    await bouncer.with('UserPolicy').authorize('update')
+    let user = await User.findOrFail(params)
+    await request.validate(new UserValidator(ctx, user.id))
+    const trx = await Database.transaction()
 
-  public async destroy({}: HttpContextContract) {}
+    try {
+      await UserService.saveUser(user, trx, ctx)
+      await trx.commit()
+    } catch (error) {
+      trx.rollback()
+      return response.internalServerError({ message: 'Something went wrong. Please try again.' })
+    }
+
+    return response.noContent()
+  }
+
+  public async destroy({ bouncer, params, response }: HttpContextContract): Promise<void> {
+    await bouncer.with('UserPolicy').authorize('delete')
+    const user = await User.findOrFail(params.id)
+    await user.delete()
+    return response.noContent()
+  }
+
+  public async activate({ bouncer, params, response }: HttpContextContract): Promise<void> {
+    await bouncer.with('UserPolicy').authorize('activate')
+    await UserService.updateUserStatus(params.id, true)
+    return response.noContent()
+  }
+
+  public async deactivate({ bouncer, params, response }: HttpContextContract): Promise<void> {
+    await bouncer.with('UserPolicy').authorize('deactivate')
+    await UserService.updateUserStatus(params.id, false)
+    return response.noContent()
+  }
 }
